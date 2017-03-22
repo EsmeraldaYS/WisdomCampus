@@ -88,7 +88,7 @@ public class ParseCourses {
                         Log.v("TAG5",text);
                         //基于java的web开发(JSP/Sevlet) 周三第5,6节{第1-16周} 尹红丽 1号公教楼602
                         String[] strings = text.split("hu");
-                        Log.v("TAG6",strings[0]+strings[4]);
+
                         String name = "";
                         try {
                             if (strings.length > 4) {
