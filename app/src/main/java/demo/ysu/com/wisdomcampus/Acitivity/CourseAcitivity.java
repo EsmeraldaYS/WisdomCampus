@@ -171,12 +171,12 @@ public class CourseAcitivity extends AppCompatActivity implements NavigationView
                 case 3:
                    Intent cardIntent = new Intent(mContext, QueryAllMateActivity.class);
                     startActivity(cardIntent);
-                    Toast.makeText(getApplicationContext(),"error ",Toast.LENGTH_SHORT).show();
                     break;
                 case 4:
-                    //startActivity(new Intent(mContext, SettingActivity.class));
-                    Toast.makeText(getApplicationContext(),"error ",Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(mContext, NewActivity.class));
                     break;
+
+
             }
         }
     };
@@ -238,7 +238,7 @@ public class CourseAcitivity extends AppCompatActivity implements NavigationView
         int id = item.getItemId();
         switch (id) {
             case R.id.add:
-                //startActivity(new Intent(mContext, AddActivity.class));
+
                 Toast.makeText(getApplicationContext(),"error ",Toast.LENGTH_SHORT).show();
                 break;
         }
@@ -283,11 +283,11 @@ public class CourseAcitivity extends AppCompatActivity implements NavigationView
         } else if (id == R.id.nav_logout) {
             //注销
             showLogoutDialog();
-        } /*else if (id == R.id.nav_settings) {
+        } else if (id == R.id.nav_settings) {
             //设置
-            //handler.sendEmptyMessageDelayed(4, 500);
+            handler.sendEmptyMessageDelayed(4, 500);
             Toast.makeText(getApplicationContext(),"error ",Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_share) {
+        } /*else if (id == R.id.nav_share) {
             //分享
             shareApp();
         }*/

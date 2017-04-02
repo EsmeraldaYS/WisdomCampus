@@ -57,25 +57,14 @@ import okhttp3.Response;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
     InformationBean informationBean=new InformationBean();;
     EditText etCode;
-
     EditText etUsername;
-
     EditText etPassword;
-
     ImageView ivCodes;
-
     TextView tvChange;
-
     ProgressBar pbLogin;
-
     TextView tvError;
-
     LinearLayout rootView;
-    Button button;
-    Button button2;
-    Button button3;
     Button btLogin ;
-    Button button4;
     private List<CourseBean> allCourseList;
     private ArrayList<String> personinformationlist;
     private String mainUrl = "http://202.206.245.225";
@@ -105,20 +94,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Context mContext = this;
     private String stuXH;
     private String stuName;
-    //所有课程
-
     private SharedPreferences sp;
-    //中文姓名的编码
     private String stuNameEncoding;
     private ProgressDialog waitDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        BmobUser me;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         Bmob.initialize(this, "992eb924efef29ccc48535e294ead989");
         etCode=(EditText)findViewById(R.id.et_code);
         etUsername=(EditText) findViewById(R.id.et_username);
@@ -132,13 +115,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         initData();
         initListener();
         showCodeimage();
-
     }
 
     private void initData() {
         sp = SpUtil.getSp(mContext, "config");
         sp.edit().putBoolean("wherein", false).apply();
+        String ath = "file://android_asset/xll.xlsx";
     }
+
     /*
           * 获取VIEWSTATE，网页如果没有最新的VIEWSTATE参数会重定向
           * */
@@ -155,7 +139,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                  HtmlUtils utils = new HtmlUtils(response);
                                  __VIEWSTATE=utils.getVIEWSTATE();
                                  changCodeImage();
-                                 response=null;
                              }
                          });
 
@@ -191,7 +174,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onResponse(Bitmap response) {
                         ivCodes.setImageBitmap(response);
-                        response=null;
                     }
                 });
     }
@@ -256,7 +238,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     @Override
                     public void onResponse(String response) {
-                        Log.d("WWW",response);
                         View focusView = null;
                         if (response.contains("验证码不正确")) {
                             etCode.setError("验证码错误");
@@ -301,7 +282,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      * @param response
      */
     private void initURL(String response) {
-      //  Log.d("TAG",response);
         HtmlUtils utils = new HtmlUtils(response);
         String xhandName = utils.getXhandName();
         String[] split = xhandName.split(" ");
@@ -312,7 +292,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         stuNameEncoding = TextEncoderUtils.encoding(stuName);
          Log.d("WTY2",WWW+stuNameEncoding);
-        //需要的url
         cjcxUrl = cjcxUrl.replace("stuxh", stuXH).replace("stuname", stuNameEncoding);
         kbcxUrl = kbcxUrl.replace("stuxh", stuXH).replace("stuname", stuNameEncoding);
         kscxUrl = kscxUrl.replace("stuxh", stuXH).replace("stuname", stuNameEncoding);
@@ -340,7 +319,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     public void onResponse(String response) {
                        Log.d(WWW,response);
                         initCourseData(stuXH);
-                        response=null;
                     }
                 });
 
@@ -377,13 +355,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onResponse(String response) {
 
-                        allCourseList = ParseCourses.getKB(response);
+                       try{
+                           allCourseList = ParseCourses.getKB(response);
+                       }
+                       catch(NullPointerException e){
+                           Log.v("NO2","同步失败");
+                       }
                         if (allCourseList == null) {
-                            System.out.println("initCourseDataOnResponse");
-                            Toast.makeText(mContext, "同步失败", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "课表同步失败,可能需要评分", Toast.LENGTH_LONG).show();
                             Log.v("NO2","同步失败");}
                         else
-                        {//课表
+                        {
                             CourseDao courseDao = new CourseDao(mContext);
                             courseDao.deleteAll();
                             boolean saveSucess = true;
@@ -407,11 +389,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             if (saveSucess) {
 
                                 allCourseList = null;
-                                Log.v("NO1","保存课表成功");
                                 sp.edit().putBoolean("isFirstIn",false).apply();
                             }
                             saveDataToDB();//保存数据
-                            response=null;
                         }
                     }
                 });
@@ -437,46 +417,54 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void onError(Call call, Exception e) {
                 Log.d(WWW,"获得个人信息失败");
             }
-
             @Override
             public void onResponse(String response) {
 
+                try{
+                    PersonInformationUtil personInformationUtil = new PersonInformationUtil();
+                    personinformationlist = personInformationUtil.get(response);
+                }
+                catch(NullPointerException e){
+                    Log.v("NO2","同步失败");
+                }
+                if (allCourseList == null) {
+                    Toast.makeText(mContext, "个人信息同步失败,可能需要评分", Toast.LENGTH_LONG).show();
+                    Log.v("NO2","同步失败");}
+                else {
 
-                PersonInformationUtil personInformationUtil= new PersonInformationUtil();
-                personinformationlist=personInformationUtil.get(response);
-                StudentDao studentDao=new StudentDao(mContext);
-                studentDao.deleteAll();
-                studentDao.add("lbl_xb",personinformationlist.get(0));
-                studentDao.add("lbl_TELNUMBER",personinformationlist.get(1));
-                studentDao.add("lbl_byzx",personinformationlist.get(2));
-                studentDao.add("lbl_mz",personinformationlist.get(3));
-                studentDao.add("lbl_zzmm",personinformationlist.get(4));
-                studentDao.add("lbl_lys",personinformationlist.get(5));
-                studentDao.add("lbl_sfzh",personinformationlist.get(6));
-                studentDao.add("lbl_xy",personinformationlist.get(7));
-                studentDao.add("lbl_zymc",personinformationlist.get(8));
-                studentDao.add("lbl_xzb",personinformationlist.get(9));
-                studentDao.add("lbl_dqszj",personinformationlist.get(10));
-                studentDao.add("lbl_xjzt",personinformationlist.get(11));
-                studentDao.add("zp",personinformationlist.get(12));
+                    StudentDao studentDao = new StudentDao(mContext);
+                    studentDao.deleteAll();
+                    studentDao.add("lbl_xb", personinformationlist.get(0));
+                    studentDao.add("lbl_TELNUMBER", personinformationlist.get(1));
+                    studentDao.add("lbl_byzx", personinformationlist.get(2));
+                    studentDao.add("lbl_mz", personinformationlist.get(3));
+                    studentDao.add("lbl_zzmm", personinformationlist.get(4));
+                    studentDao.add("lbl_lys", personinformationlist.get(5));
+                    studentDao.add("lbl_sfzh", personinformationlist.get(6));
+                    studentDao.add("lbl_xy", personinformationlist.get(7));
+                    studentDao.add("lbl_zymc", personinformationlist.get(8));
+                    studentDao.add("lbl_xzb", personinformationlist.get(9));
+                    studentDao.add("lbl_dqszj", personinformationlist.get(10));
+                    studentDao.add("lbl_xjzt", personinformationlist.get(11));
+                    studentDao.add("zp", personinformationlist.get(12));
 
 
-                informationBean.setName(Base64.encodeToString(stuName.trim().getBytes(), Base64.DEFAULT));
-                informationBean.setNumber(Base64.encodeToString(stuXH.trim().getBytes(), Base64.DEFAULT));
-                informationBean.setGender(Base64.encodeToString(personinformationlist.get(0).trim().getBytes(), Base64.DEFAULT));
-                informationBean.setSchoolOfGraduation(Base64.encodeToString(personinformationlist.get(2).trim().getBytes(), Base64.DEFAULT));
-                informationBean.setNation(Base64.encodeToString(personinformationlist.get(3).trim().getBytes(), Base64.DEFAULT));
-                informationBean.setPoliticsStatus(Base64.encodeToString(personinformationlist.get(4).trim().getBytes(), Base64.DEFAULT));
-                informationBean.setHometown(Base64.encodeToString(personinformationlist.get(5).trim().getBytes(), Base64.DEFAULT));
-                informationBean.setIdNumber(Base64.encodeToString(personinformationlist.get(6).trim().getBytes(), Base64.DEFAULT));
-                informationBean.setCollege(Base64.encodeToString(personinformationlist.get(7).trim().getBytes(), Base64.DEFAULT));
-                informationBean.setClasses(Base64.encodeToString(personinformationlist.get(9).trim().getBytes(), Base64.DEFAULT));
-                informationBean.setEnrollmentYear(Base64.encodeToString(personinformationlist.get(10).trim().getBytes(), Base64.DEFAULT));
-                informationBean.setZaiDu(Base64.encodeToString(personinformationlist.get(11).trim().getBytes(), Base64.DEFAULT));
-                informationBean.setPicture(Base64.encodeToString(personinformationlist.get(12).trim().getBytes(), Base64.DEFAULT));
-                   BmobUser me=new BmobUser();
+                    informationBean.setName(Base64.encodeToString(stuName.trim().getBytes(), Base64.DEFAULT));
+                    informationBean.setNumber(Base64.encodeToString(stuXH.trim().getBytes(), Base64.DEFAULT));
+                    informationBean.setGender(Base64.encodeToString(personinformationlist.get(0).trim().getBytes(), Base64.DEFAULT));
+                    informationBean.setSchoolOfGraduation(Base64.encodeToString(personinformationlist.get(2).trim().getBytes(), Base64.DEFAULT));
+                    informationBean.setNation(Base64.encodeToString(personinformationlist.get(3).trim().getBytes(), Base64.DEFAULT));
+                    informationBean.setPoliticsStatus(Base64.encodeToString(personinformationlist.get(4).trim().getBytes(), Base64.DEFAULT));
+                    informationBean.setHometown(Base64.encodeToString(personinformationlist.get(5).trim().getBytes(), Base64.DEFAULT));
+                    informationBean.setIdNumber(Base64.encodeToString(personinformationlist.get(6).trim().getBytes(), Base64.DEFAULT));
+                    informationBean.setCollege(Base64.encodeToString(personinformationlist.get(7).trim().getBytes(), Base64.DEFAULT));
+                    informationBean.setClasses(Base64.encodeToString(personinformationlist.get(9).trim().getBytes(), Base64.DEFAULT));
+                    informationBean.setEnrollmentYear(Base64.encodeToString(personinformationlist.get(10).trim().getBytes(), Base64.DEFAULT));
+                    informationBean.setZaiDu(Base64.encodeToString(personinformationlist.get(11).trim().getBytes(), Base64.DEFAULT));
+                    informationBean.setPicture(Base64.encodeToString(personinformationlist.get(12).trim().getBytes(), Base64.DEFAULT));
+                    BmobUser me = new BmobUser();
                     //此处应添加判断是否为HR
-                Log.d("qqq",personinformationlist.get(9).replace("-",""));
+                    Log.d("qqq", personinformationlist.get(9).replace("-", ""));
                   /*  BmobRole hr = new BmobRole("hr");
                     hr.getUsers().add(me);
                     hr.save();
@@ -485,41 +473,41 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     BmobACL acl = new BmobACL();
                     acl.setRoleReadAccess(hr, true);
                     informationBean.setACL(acl);*/
-                informationBean.save(new SaveListener<String>() {
-                    @Override
-                    public void done(String s, BmobException e) {
-                        if(e==null){
-                            Toast.makeText(mContext,"添加数据成功，返回objectId为："+s,Toast.LENGTH_LONG).show();
-                        }else{
-                            Toast.makeText(mContext,"创建数据失败：" + e.getMessage(),Toast.LENGTH_LONG).show();
-                            Log.d("qqqw",e.getMessage());
-                        }
-                    }
-                });
-                BmobQuery<InformationBean> query = new BmobQuery<InformationBean>();
-                query.addWhereEqualTo("classes", personinformationlist.get(9).trim());
-                query.setLimit(50);
-                query.findObjects(new FindListener<InformationBean>() {
-                    @Override
-                    public void done(List<InformationBean> list, BmobException e) {
-                        if(e==null){
-                            Log.d("ppp","查询成功：共"+list.size()+"条数据。");
-                            for (InformationBean gameScore : list) {
-                                //获得playerName的信息
-                                gameScore.getName();
-                                //获得数据的objectId信息
-                                gameScore.getObjectId();
-                                //获得createdAt数据创建时间（注意是：createdAt，不是createAt）
-                                gameScore.getCreatedAt();
+                    informationBean.save(new SaveListener<String>() {
+                        @Override
+                        public void done(String s, BmobException e) {
+                            if (e == null) {
+                                Toast.makeText(mContext, "添加数据成功，返回objectId为：" + s, Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(mContext, "创建数据失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                Log.d("qqqw", e.getMessage());
                             }
-                        }else{
-                            Log.i("ppp","失败："+e.getMessage()+","+e.getErrorCode());
                         }
-            }
-        });
+                    });
+                    BmobQuery<InformationBean> query = new BmobQuery<InformationBean>();
+                    query.addWhereEqualTo("classes", personinformationlist.get(9).trim());
+                    query.setLimit(50);
+                    query.findObjects(new FindListener<InformationBean>() {
+                        @Override
+                        public void done(List<InformationBean> list, BmobException e) {
+                            if (e == null) {
+                                Log.d("ppp", "查询成功：共" + list.size() + "条数据。");
+                                for (InformationBean gameScore : list) {
+                                    //获得playerName的信息
+                                    gameScore.getName();
+                                    //获得数据的objectId信息
+                                    gameScore.getObjectId();
+                                    //获得createdAt数据创建时间（注意是：createdAt，不是createAt）
+                                    gameScore.getCreatedAt();
+                                }
+                            } else {
+                                Log.i("ppp", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                            }
+                        }
+                    });
 
 
-
+                }
             }
         });
     }
@@ -546,12 +534,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         baseInfoDao.add("password", password);
         //学生基本信息
         boolean saveSucess = true;
-
-
-
         //数据保存成功
         if (saveSucess) {
-
             sp.edit().putBoolean("isFirstIn", false).apply();
             waitDialog.dismiss();
             Intent intent3=new Intent(mContext,CourseAcitivity.class);
@@ -569,7 +553,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
             case R.id.bt_login:
                 attemptLogin();
                break;

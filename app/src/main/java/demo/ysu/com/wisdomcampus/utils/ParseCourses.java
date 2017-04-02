@@ -24,23 +24,13 @@ public class ParseCourses {
     private static List<CourseBean> courseList = new ArrayList<>();
 
     public static List<CourseBean> getKB(String response) {
+        Log.d("CESHI",response);
         response = response.replace("<br>", "hu");
         Document document = Jsoup.parse(response);
         Element table1 = document.getElementById("Table1");
-        Log.v("TAG",table1.toString());
-        /*table1.child(0).child(0).remove();
-        table1.child(0).child(0).remove();
-        table1.child(0).child(0).child(0).remove();
-        table1.child(0).child(4).child(0).remove();
-        table1.child(0).child(8).child(0).remove();*/
-
-
-        //Element tbody=table1.select("tr").get(0);
         //拿到tbody
         Element tbody = table1.select("tbody").get(0);
-        Log.v("TAG2",tbody.toString());
         //Elements trss=document.select("tr");
-
        // Element tbody=trss.get(0);
         //去除前面两行 ，时间和早晨
         tbody.child(0).remove();
@@ -61,7 +51,6 @@ public class ParseCourses {
                 //一共有多少列 -2 晚自习有三节课，手动去掉最后一行，即第十一节课
                 int columnNum = tr.childNodeSize() - 2;
                 for (int j = 1; j < columnNum - 1; j++) {
-
                     String timeDetail = null;
                     switch (i) {
                         case 0:
@@ -86,7 +75,6 @@ public class ParseCourses {
                         CourseBean course = new CourseBean();
                         String text = colum.text();
                         Log.v("TAG5",text);
-                        //基于java的web开发(JSP/Sevlet) 周三第5,6节{第1-16周} 尹红丽 1号公教楼602
                         String[] strings = text.split("hu");
 
                         String name = "";

@@ -15,8 +15,6 @@ import android.widget.ImageView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.BitmapCallback;
 
-import org.apache.commons.codec.binary.Base64;
-
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;

@@ -52,9 +52,6 @@ public class CourseEditActivity extends AppCompatActivity {
         initListener();
     }
 
-    /**
-     * 默认的fragment
-     */
     private void initFragment() {
         CourseFragment courseFragment = new CourseFragment();
         fragmentManager = getSupportFragmentManager();

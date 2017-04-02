@@ -96,9 +96,9 @@ public class QueryAllMateActivity extends AppCompatActivity {
                                 .setPositiveButton("登录", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                Log.d("owo","WWW"+obj.get(position));
                                 et.setText(obj.get(position));
                                 Intent intent=new Intent(context,StudentInformationActivity.class);
+                                Log.d("CESHI",et.getText().toString().trim()+"true");
                                 intent.putExtra("ed",et.getText().toString().trim()+"true");
                                 startActivity(intent);
                              }
@@ -115,7 +115,6 @@ public class QueryAllMateActivity extends AppCompatActivity {
                 });
             }
         };
-        Log.d("ppp", classes);
         BmobQuery<InformationBean> query = new BmobQuery<InformationBean>();
         query.addWhereEqualTo("classes", classes.trim());
         query.setLimit(50);
@@ -129,15 +128,9 @@ public class QueryAllMateActivity extends AppCompatActivity {
                     message.obj = list;
                     hander.sendMessage(message);
                     for (InformationBean gameScore : list) {
-                        //获得playerName的信息
                         gameScore.getName();
-                        //获得数据的objectId信息
                         gameScore.getObjectId();
-                        //获得createdAt数据创建时间（注意是：createdAt，不是createAt）
                         gameScore.getCreatedAt();
-                        /*HandlerThread handlerThread = new HandlerThread("handlerThread");
-                        MyHandler handler = new MyHandler(handlerThread.getLooper());
-                        Message msg = handler.obtainMessage();*/
                     }
                 } else {
                     Log.i("ppp", "失败：" + e.getMessage() + "," + e.getErrorCode());

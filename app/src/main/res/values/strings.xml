@@ -140,10 +140,11 @@
     <string name="title_couse">课程</string>
     <string name="exam_time">考试时间 :</string>
     <string name="exam_location">考试地点 :</string>
-    <string name="chengji2" >查询全班</string>
+    <string name="chengji2">查询全班</string>
     <string name="title_activity_main3">课表</string>
     <string name="information">个人信息</string>
     <string name="AllInformatica">全班信息</string>
     <string name="time_out">请求超时,请重试</string>
+    <string name="news">校园新闻</string>
 
 </resources>
