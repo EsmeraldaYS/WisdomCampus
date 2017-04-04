@@ -98,8 +98,7 @@ public class QueryAllMateActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 et.setText(obj.get(position));
                                 Intent intent=new Intent(context,StudentInformationActivity.class);
-                                Log.d("CESHI",et.getText().toString().trim()+"true");
-                                intent.putExtra("ed",et.getText().toString().trim()+"true");
+                                intent.putExtra("ed",et.getText().toString().trim());
                                 startActivity(intent);
                              }
                         }).show();

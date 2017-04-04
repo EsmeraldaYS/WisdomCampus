@@ -26,13 +26,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Acitivity.StudentInformationActivity" />
         <activity android:name=".Acitivity.ScoreActivity" />
-        <activity android:name=".Acitivity.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".Acitivity.LoginActivity"></activity>
         <activity
             android:name=".Acitivity.CourseAcitivity"
             android:label="@string/title_activity_main3"
@@ -42,7 +36,15 @@
             android:label="@string/title_activity_course_edit"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Acitivity.QueryAllMateActivity" />
-        <activity android:name=".Acitivity.NewActivity"></activity>
+        <activity android:name=".Acitivity.NewActivity" />
+        <activity android:name=".Acitivity.SplashActivity"
+            android:theme="@style/AppTheme.FullScreen">>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -13,9 +13,11 @@
 
     <ImageView
         android:id="@+id/iv_user_head"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@mipmap/ic_launcher"
+        android:layout_width="59dp"
+        android:layout_height="53dp"
+        android:background="@mipmap/login_header"
+        android:maxHeight="10dp"
+        android:maxWidth="10dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing" />
 
     <TextView
@@ -23,13 +25,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="Android Studio"
+        android:text="欢迎你"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
         android:id="@+id/header_xh"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="android.studio@android.com" />
+        android:text="燕山大学" />
 
 </LinearLayout>

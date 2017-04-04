@@ -56,6 +56,11 @@ public class HtmlUtils {
         Log.d(TAG,text);
         return  text;
     }
+    public String getVIEWSTATEGENERATOR(){
+        String text=response.substring(response.indexOf("__VIEWSTATEGENERATOR")+30,response.indexOf("__VIEWSTATEGENERATOR")+30+15);
+        Log.d("__VIEWSTATEGENERATOR",text);
+        return  text;
+    }
    public List<ScoreBean> parseScore() {
         List<ScoreBean> scoreList = new ArrayList<>();
         Document document = Jsoup.parse(response);

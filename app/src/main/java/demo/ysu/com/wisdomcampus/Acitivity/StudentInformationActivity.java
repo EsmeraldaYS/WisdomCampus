@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.BitmapCallback;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
@@ -29,7 +29,7 @@ public class StudentInformationActivity extends AppCompatActivity {
     private RecyclerView mrecyclerView;
     private String Url = "http://202.206.245.225/zjdxgc/C";
     private Context mContext = this;
-    private List<String> mDatas;
+    private ArrayList<String> mDatas=new ArrayList<String>();
     private MyRecyclerViewAdapter recycleAdapter;
     private LinearLayoutManager mlinearLayoutManager;
     private Context context=this;
@@ -42,6 +42,7 @@ public class StudentInformationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main2);
         zhaopian=(ImageView) findViewById(R.id.zhaopian);
         if (getIntent().getStringExtra("ed")!=null) {
+
             initIntenet(getIntent().getStringExtra("ed"));
         }else {
             initData();
@@ -50,12 +51,14 @@ public class StudentInformationActivity extends AppCompatActivity {
     }
 
     private void initIntenet(String ed ) {
+        Log.d("INFOR2",ed);
         BmobQuery<InformationBean> bmob2Query = new BmobQuery<InformationBean>();
         bmob2Query.getObject(ed,new QueryListener<InformationBean>() {
             @Override
             public void done(InformationBean informationBean, BmobException e) {
+                Log.d("INFOR",informationBean.toString());
                 if(e==null){
-                    mDatas.clear();
+                    Log.d("INFOR5",informationBean.getName());
                     mDatas.add(informationBean.getName());
                     mDatas.add(informationBean.getGender());
                     mDatas.add(informationBean.getSchoolOfGraduation());
@@ -72,7 +75,7 @@ public class StudentInformationActivity extends AppCompatActivity {
                     recycleAdapter=new MyRecyclerViewAdapter(context,mDatas);
                     mrecyclerView.setAdapter( recycleAdapter);
                 }else{
-                    Log.d("wtd","查询失败：" + e.getMessage());
+                    Log.d("INFOR3","查询失败：" + e.getMessage());
                 }
 
             }});

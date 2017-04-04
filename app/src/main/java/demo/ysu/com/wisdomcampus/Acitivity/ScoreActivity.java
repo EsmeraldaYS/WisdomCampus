@@ -44,6 +44,7 @@ public class ScoreActivity extends AppCompatActivity {
     private String selectMode = null;
     private static String StuCenterUrl= "http://202.206.245.225/zjdxgc/xs_main.aspx?xh=stuxh";
     private static String VIEWSTATE = "dDwxODI2NTc3MzMwO3Q8cDxsPHhoOz47bDwxNTAxMDQwMTAxNDg7Pj47bDxpPDE+Oz47bDx0PDtsPGk8MT47aTwzPjtpPDU+O2k8Nz47aTw5PjtpPDExPjtpPDEzPjtpPDE2PjtpPDI2PjtpPDI3PjtpPDI4PjtpPDM1PjtpPDM3PjtpPDM5PjtpPDQxPjtpPDQ1Pjs+O2w8dDxwPHA8bDxUZXh0Oz47bDzlrablj7fvvJoxNTAxMDQwMTAxNDg7Pj47Pjs7Pjt0PHA8cDxsPFRleHQ7PjtsPOWnk+WQje+8muadqOaMr+aAnTs+Pjs+Ozs+O3Q8cDxwPGw8VGV4dDs+O2w85a2m6Zmi77ya5L+h5oGv56eR5a2m5LiO5bel56iL5a2m6ZmiOz4+Oz47Oz47dDxwPHA8bDxUZXh0Oz47bDzkuJPkuJrvvJo7Pj47Pjs7Pjt0PHA8cDxsPFRleHQ7PjtsPOiuoeeul+acuuenkeWtpuS4juaKgOacrzs+Pjs+Ozs+O3Q8cDxwPGw8VGV4dDs+O2w86KGM5pS/54+t77ya6K6h566X5py6MTUtNTs+Pjs+Ozs+O3Q8cDxwPGw8VGV4dDs+O2w8MjAxNTA0MDE7Pj47Pjs7Pjt0PHQ8cDxwPGw8RGF0YVRleHRGaWVsZDtEYXRhVmFsdWVGaWVsZDs+O2w8WE47WE47Pj47Pjt0PGk8Mz47QDxcZTsyMDE2LTIwMTc7MjAxNS0yMDE2Oz47QDxcZTsyMDE2LTIwMTc7MjAxNS0yMDE2Oz4+Oz47Oz47dDxwPDtwPGw8b25jbGljazs+O2w8d2luZG93LnByaW50KClcOzs+Pj47Oz47dDxwPDtwPGw8b25jbGljazs+O2w8d2luZG93LmNsb3NlKClcOzs+Pj47Oz47dDxwPHA8bDxWaXNpYmxlOz47bDxvPHQ+Oz4+Oz47Oz47dDxAMDw7QDA8Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7QDA8cDxsPFZpc2libGU7PjtsPG88dD47Pj47Ozs7Pjs7Pjs7Ozs7Ozs7Oz47Oz47dDxAMDw7Ozs7Ozs7Ozs7Pjs7Pjt0PEAwPDs7Ozs7Ozs7Ozs+Ozs+O3Q8O2w8aTwwPjtpPDE+O2k8Mj47aTw0Pjs+O2w8dDw7bDxpPDA+O2k8MT47PjtsPHQ8O2w8aTwwPjtpPDE+Oz47bDx0PEAwPDs7Ozs7Ozs7Ozs+Ozs+O3Q8QDA8Ozs7Ozs7Ozs7Oz47Oz47Pj47dDw7bDxpPDA+O2k8MT47PjtsPHQ8QDA8Ozs7Ozs7Ozs7Oz47Oz47dDxAMDw7Ozs7Ozs7Ozs7Pjs7Pjs+Pjs+Pjt0PDtsPGk8MD47PjtsPHQ8O2w8aTwwPjs+O2w8dDxAMDw7Ozs7Ozs7Ozs7Pjs7Pjs+Pjs+Pjt0PDtsPGk8MD47aTwxPjs+O2w8dDw7bDxpPDA+Oz47bDx0PEAwPHA8cDxsPFZpc2libGU7PjtsPG88Zj47Pj47Pjs7Ozs7Ozs7Ozs+Ozs+Oz4+O3Q8O2w8aTwwPjs+O2w8dDxAMDxwPHA8bDxWaXNpYmxlOz47bDxvPGY+Oz4+Oz47Ozs7Ozs7Ozs7Pjs7Pjs+Pjs+Pjt0PDtsPGk8MD47PjtsPHQ8O2w8aTwwPjs+O2w8dDxwPHA8bDxUZXh0Oz47bDxZU0RYOz4+Oz47Oz47Pj47Pj47Pj47dDxAMDw7Ozs7Ozs7Ozs7Pjs7Pjs+Pjs+Pjs+Z7BDgqrgO6kfLQONUgrLTOsiNS0=";
+    private static String __VIEWSTATEGENERATOR="";
     private static String cjUrl="http://202.206.245.225/zjdxgc/xsgrxx.aspx?xh=stuxh&xm=stuname&gnmkdm=N121505";
     private List<ScoreBean> cjList;
     private Toolbar toolbar;
@@ -113,8 +114,10 @@ private  String stuNameEncoding;
 
                     @Override
                     public void onResponse(String response) {
+                        logd logd=new logd();
+                        System.out.println(response);
+                        logd.showLog(response);
                         HtmlUtils utils = new HtmlUtils(response);
-
                         VIEWSTATE=utils.getVIEWSTATE2();
 
                     }
@@ -151,14 +154,16 @@ private  String stuNameEncoding;
                 .addParams("ddlXN", ddlXN)
                 .addParams("ddlXQ", ddlXQ)
                 .addParams("Button1", "%B0%B4%D1%A7%C6%DA%B2%E9%D1%AF")
+                //.addParams("__VIEWSTATEGENERATOR",__VIEWSTATEGENERATOR)
                 .build().execute(new StringCallback() {
             @Override
             public void onError(Call call, Exception e) {
-                Log.d("TAG4", "查询失败");
+                Log.d("TAGcj", "查询失败");
             }
             @Override
             public void onResponse(String response) {
-                logd.showLog(response);
+                System.out.println(response);
+                Log.d("TAGcja", response);
                 HtmlUtils cjUtils = new HtmlUtils(response);
                 cjList = cjUtils.parseScore();
 

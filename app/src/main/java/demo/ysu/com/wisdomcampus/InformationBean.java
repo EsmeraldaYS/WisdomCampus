@@ -427,4 +427,56 @@ public class InformationBean extends BmobObject implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "InformationBean{" +
+                "name='" + name + '\'' +
+                ", number='" + number + '\'' +
+                ", SchoolOfGraduation='" + SchoolOfGraduation + '\'' +
+                ", nation='" + nation + '\'' +
+                ", PoliticsStatus='" + PoliticsStatus + '\'' +
+                ", hometown='" + hometown + '\'' +
+                ", IdNumber='" + IdNumber + '\'' +
+                ", college='" + college + '\'' +
+                ", classes='" + classes + '\'' +
+                ", EnrollmentYear='" + EnrollmentYear + '\'' +
+                ", ZaiDu='" + ZaiDu + '\'' +
+                ", picture='" + picture + '\'' +
+                ", grade1='" + grade1 + '\'' +
+                ", grade2='" + grade2 + '\'' +
+                ", grade3='" + grade3 + '\'' +
+                ", grade4='" + grade4 + '\'' +
+                ", grade5='" + grade5 + '\'' +
+                ", grade6='" + grade6 + '\'' +
+                ", grade7='" + grade7 + '\'' +
+                ", grade8='" + grade8 + '\'' +
+                ", grade9='" + grade9 + '\'' +
+                ", grade10='" + grade10 + '\'' +
+                ", grade11='" + grade11 + '\'' +
+                ", grade12='" + grade12 + '\'' +
+                ", grade13='" + grade13 + '\'' +
+                ", grade14='" + grade14 + '\'' +
+                ", grade15='" + grade15 + '\'' +
+                ", grade16='" + grade16 + '\'' +
+                ", grade17='" + grade17 + '\'' +
+                ", grade18='" + grade18 + '\'' +
+                ", grade19='" + grade19 + '\'' +
+                ", grade20='" + grade20 + '\'' +
+                ", grade21='" + grade21 + '\'' +
+                ", grade22='" + grade22 + '\'' +
+                ", grade23='" + grade23 + '\'' +
+                ", grade24='" + grade24 + '\'' +
+                ", grade25='" + grade25 + '\'' +
+                ", grade26='" + grade26 + '\'' +
+                ", grade27='" + grade27 + '\'' +
+                ", grade28='" + grade28 + '\'' +
+                ", grade29='" + grade29 + '\'' +
+                ", grade30='" + grade30 + '\'' +
+                ", grade31='" + grade31 + '\'' +
+                ", grade32='" + grade32 + '\'' +
+                ", grade33='" + grade33 + '\'' +
+                ", gender='" + gender + '\'' +
+                '}';
+    }
 }

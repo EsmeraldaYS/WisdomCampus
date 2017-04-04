@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Administrator on 2017/2/4.
@@ -46,11 +45,11 @@ public class StudentDao {
         return value;
     }
 
-    public List<String> queryAll() {
+    public ArrayList<String> queryAll() {
         MySQLiteOpenHelper helper = new MySQLiteOpenHelper(mContext);
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor cursor = db.query("PersonInformation", new String[]{"key", "value"}, null, null, null, null, null, null);
-        List<String> list = new ArrayList<String>();
+        ArrayList<String> list = new ArrayList<String>();
         while (cursor.moveToNext()) {
             String key = cursor.getString(0);
             String value = cursor.getString(1);

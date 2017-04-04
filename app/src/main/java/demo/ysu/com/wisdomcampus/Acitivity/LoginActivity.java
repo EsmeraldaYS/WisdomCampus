@@ -354,6 +354,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     @Override
                     public void onResponse(String response) {
+                        Log.v("NO2",response);
 
                        try{
                            allCourseList = ParseCourses.getKB(response);
@@ -425,17 +426,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     personinformationlist = personInformationUtil.get(response);
                 }
                 catch(NullPointerException e){
-                    Log.v("NO2","同步失败");
+                    Log.v("NO3","同步失败");
                 }
-                if (allCourseList == null) {
+                if (personinformationlist == null) {
                     Toast.makeText(mContext, "个人信息同步失败,可能需要评分", Toast.LENGTH_LONG).show();
-                    Log.v("NO2","同步失败");}
+                    Log.v("NO3","个人同步失败");}
                 else {
 
                     StudentDao studentDao = new StudentDao(mContext);
                     studentDao.deleteAll();
                     studentDao.add("lbl_xb", personinformationlist.get(0));
-                    studentDao.add("lbl_TELNUMBER", personinformationlist.get(1));
+
                     studentDao.add("lbl_byzx", personinformationlist.get(2));
                     studentDao.add("lbl_mz", personinformationlist.get(3));
                     studentDao.add("lbl_zzmm", personinformationlist.get(4));

@@ -1,8 +1,8 @@
 package demo.ysu.com.wisdomcampus;
 
 /**
- * @author Hugo
- * Created on 2016/4/24 9:50.
+ * @author yang
+ * Created on 2017/3/24 9:50.
  */
 public class CourseBean {
     private String courseName;
