@@ -84,7 +84,8 @@ public class StudentInformationActivity extends AppCompatActivity {
     private void initData() {
         StudentDao studentDao=new StudentDao(mContext);
         mDatas=studentDao.queryAll();
-        OkHttpUtils.get().url(Url.replace("C",mDatas.get(mDatas.size()-1))).build()
+        Log.d("Wes",mDatas.get(mDatas.size()-2));
+        OkHttpUtils.get().url(Url.replace("C",mDatas.get(mDatas.size()-2))).build()
                 .connTimeOut(5000)
                 .execute(new BitmapCallback() {
                     @Override

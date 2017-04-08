@@ -5,6 +5,16 @@ package demo.ysu.com.wisdomcampus;
  * Created on 2016/12/21 14:31.
  */
 public class ScoreBean {
+    private String courseXQ;
+
+    public String getCourseXQ() {
+        return courseXQ;
+    }
+
+    public void setCourseXQ(String courseXQ) {
+        this.courseXQ = courseXQ;
+    }
+
     private String courseId;
     private String courseName;
     private String courseXz;
@@ -14,6 +24,62 @@ public class ScoreBean {
     private String courseCx;
     private String courseXf;
     private String courseBj;
+    private String courseXY;
+
+    @Override
+    public String toString() {
+        return "ScoreBean{" +
+                "courseId='" + courseId + '\'' +
+                ", courseName='" + courseName + '\'' +
+                ", courseXz='" + courseXz + '\'' +
+                ", courseCj='" + courseCj + '\'' +
+                ", courseGs='" + courseGs + '\'' +
+                ", courseBk='" + courseBk + '\'' +
+                ", courseCx='" + courseCx + '\'' +
+                ", courseXf='" + courseXf + '\'' +
+                ", courseBj='" + courseBj + '\'' +
+                ", courseXY='" + courseXY + '\'' +
+                ", courseBJ='" + courseBJ + '\'' +
+                ", courseBZ='" + courseBZ + '\'' +
+                ", courseXW='" + courseXW + '\'' +
+                '}';
+    }
+
+    public String getCourseXY() {
+        return courseXY;
+    }
+
+    public void setCourseXY(String courseXY) {
+        this.courseXY = courseXY;
+    }
+
+    public String getCourseBJ() {
+        return courseBJ;
+    }
+
+    public void setCourseBJ(String courseBJ) {
+        this.courseBJ = courseBJ;
+    }
+
+    public String getCourseBZ() {
+        return courseBZ;
+    }
+
+    public void setCourseBZ(String courseBZ) {
+        this.courseBZ = courseBZ;
+    }
+
+    public String getCourseXW() {
+        return courseXW;
+    }
+
+    public void setCourseXW(String courseXW) {
+        this.courseXW = courseXW;
+    }
+
+    private String courseBJ;
+    private String courseBZ;
+    private String courseXW;
 
     public String getCourseBj() {
         return courseBj;
@@ -87,18 +153,5 @@ public class ScoreBean {
         this.courseXz = courseXz;
     }
 
-    @Override
-    public String toString() {
-        return "ScoreBean{" +
-                courseId + '\'' +
-                courseBj + '\'' +
-                courseName + '\'' +
-                courseXz + '\'' +
-                courseCj + '\'' +
-                courseGs + '\'' +
-                courseBk + '\'' +
-                courseCx + '\'' +
-                courseXf + '\''
-                ;
-    }
+
 }

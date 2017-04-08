@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
@@ -16,6 +17,8 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import demo.ysu.com.wisdomcampus.R;
+import demo.ysu.com.wisdomcampus.utils.LINK;
+import demo.ysu.com.wisdomcampus.utils.SpUtil;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -64,6 +67,12 @@ public class SplashActivity extends AppCompatActivity {
         //mSplashCopyright=(TextView)  findViewById(R.id.splash_copyright);
         Random r = new Random(SystemClock.elapsedRealtime());
         mIvSplash.setImageResource(SPLASH_ARRAY[r.nextInt(SPLASH_ARRAY.length)]);
+        SharedPreferences sp = SpUtil.getSp(this, "config");
+        if (LINK.isNetworkAvailable(this)) {
+            sp.edit().putBoolean("Intenet", true).apply();
+        }
+        //进入到loginActivity
+
         animateImage();
     }
 
@@ -72,6 +81,8 @@ public class SplashActivity extends AppCompatActivity {
         ObjectAnimator animatorY = ObjectAnimator.ofFloat(mIvSplash, "scaleY", 1f, SCALE_END);
 
         AnimatorSet set = new AnimatorSet();
+
+
         set.setDuration(ANIMATION_DURATION).play(animatorX).with(animatorY);
         set.start();
 

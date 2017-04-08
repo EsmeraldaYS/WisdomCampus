@@ -9,10 +9,10 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -67,25 +67,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     Button btLogin ;
     private List<CourseBean> allCourseList;
     private ArrayList<String> personinformationlist;
-    private String mainUrl = "http://202.206.245.225";
+    private String mainUrl = "http://202.206.245.231";
     //验证码
-    private String codeUrl = "http://202.206.245.225/zjdxgc/CheckCode.aspx";
+    private String codeUrl = "http://202.206.245.231/zjdxgc/CheckCode.aspx";
     //登录
-    private String loginUrl = "http://202.206.245.225/zjdxgc/default2.aspx";
+    private String loginUrl = "http://202.206.245.231/zjdxgc/default2.aspx";
     //登出
-    private String logoutUrl = "http://202.206.245.225/zjdxgc/logout.aspx";
+    private String logoutUrl = "http://202.206.245.231/zjdxgc/logout.aspx";
     //无需验证码登陆的url
-    private String noCodeLoginUrl = "http://202.206.245.225/zjdxgc/default6.aspx";
+    private String noCodeLoginUrl = "http://202.206.245.231/zjdxgc/default6.aspx";
     //下面的url都需要进行替换修改
-    private static String piUrl="http://202.206.245.225/zjdxgc/xsgrxx.aspx?xh=stuxh&xm=stuname&gnmkdm=N121501";
+    private static String piUrl="http://202.206.245.231/zjdxgc/xsgrxx.aspx?xh=stuxh&xm=stuname&gnmkdm=N121501";
     //个人中心
-    private static String StuCenterUrl = "http://202.206.245.225/zjdxgc/xs_main.aspx?xh=stuxh";
+    private static String StuCenterUrl = "http://202.206.245.231/zjdxgc/xs_main.aspx?xh=stuxh";
     //成绩查询
-    private static String cjcxUrl = "http://202.206.245.225/zjdxgc/xscj.aspx?xh=stuxh&xm=stuname&gnmkdm=N121605";
+    private static String cjcxUrl = "http://202.206.245.231/zjdxgc/xscj.aspx?xh=stuxh&xm=stuname&gnmkdm=N121605";
     //考试查询
-    private static String kscxUrl = "http://202.206.245.225/zjdxgc/xskscx.aspx?xh=stuxh&xm=stuname%90&gnmkdm=N121604";
+    private static String kscxUrl = "http://202.206.245.231/zjdxgc/xskscx.aspx?xh=stuxh&xm=stuname%90&gnmkdm=N121604";
     //课程表查询
-    private static String kbcxUrl = "http://202.206.245.225/zjdxgc/xskbcx.aspx?xh=stuxh&xm=stuname&gnmkdm=N121603";
+    private static String kbcxUrl = "http://202.206.245.231/zjdxgc/xskbcx.aspx?xh=stuxh&xm=stuname&gnmkdm=N121603";
     private static String __VIEWSTATE;
     private String WWW="WWW";
     private String userId;
@@ -97,9 +97,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private SharedPreferences sp;
     private String stuNameEncoding;
     private ProgressDialog waitDialog;
-
+    boolean Intenet;
+    boolean isFirstIn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Bmob.initialize(this, "992eb924efef29ccc48535e294ead989");
@@ -112,6 +114,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         tvError= (TextView) findViewById(R.id.tv_error);
         rootView= (LinearLayout) findViewById(R.id.rootView);
         btLogin= (Button) findViewById(R.id.bt_login);
+        SharedPreferences sp = SpUtil.getSp(this, "config");
+        isFirstIn = sp.getBoolean("isFirstIn", true);
+        Intenet=sp.getBoolean("Intenet", true);
+
         initData();
         initListener();
         showCodeimage();
@@ -124,10 +130,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     /*
-          * 获取VIEWSTATE，网页如果没有最新的VIEWSTATE参数会重定向
+          * 获取VIEWSTATE，网页如果没有最新的VIEWSTATE参数会重定向,(我也不知道是不是重定向)
           * */
     private void initListener() {
-  OkHttpUtils.get().url("http://202.206.245.225/zjdxgc/default2.aspx").build() .connTimeOut(5000)
+  OkHttpUtils.get().url("http://202.206.245.231/zjdxgc/default2.aspx").build() .connTimeOut(5000)
                 .execute(new StringCallback() {
                              @Override
                              public void onError(Call call, Exception e) {
@@ -224,8 +230,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         post.addParams("RadioButtonList1", "%D1%A7%C9%FA");
         post.addParams("Button1", "");
         post.addParams("lbLanguage", "");
-        post.addHeader("Host", "202.206.245.225");
-        post.addHeader("Referer", "http://202.206.245.225/zjdxgc/default2.aspx");
+        post.addHeader("Host", "202.206.245.231");
+        post.addHeader("Referer", "http://202.206.245.231/zjdxgc/default2.aspx");
         post.addHeader("User-Agent", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)");
         post.build()
                 .connTimeOut(5000)
@@ -304,7 +310,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void enterTheSecond(String stuCenterUrl) {
 
         OkHttpUtils.get().url(StuCenterUrl)
-                .addHeader("Host",	"202.206.245.225")
+                .addHeader("Host",	"202.206.245.231")
                 .addHeader("Referer",loginUrl)
                 .addHeader("User-Agent","Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)")
                 .build()
@@ -335,7 +341,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .addHeader("gnmkdm", "N121603")
                 .addParams("xm",stuNameEncoding)
                 .addHeader("Referer", kbcxUrl)
-                .addHeader("Host","202.206.245.225")
+                .addHeader("Host","202.206.245.231")
                 .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36")
                 .build()
                 .connTimeOut(5000)
@@ -408,7 +414,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void getThePersonalInformation(String piUrl) {
 
         OkHttpUtils.get().url(piUrl)
-                .addHeader("Host",	"202.206.245.225")
+                .addHeader("Host",	"202.206.245.231")
                 .addHeader("Referer",StuCenterUrl)
                 .addHeader("User-Agent","Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)")
                 .build()
@@ -433,7 +439,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Log.v("NO3","个人同步失败");}
                 else {
 
-                    StudentDao studentDao = new StudentDao(mContext);
+                   StudentDao studentDao = new StudentDao(mContext);
                     studentDao.deleteAll();
                     studentDao.add("lbl_xb", personinformationlist.get(0));
 
@@ -450,22 +456,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     studentDao.add("zp", personinformationlist.get(12));
 
 
-                    informationBean.setName(Base64.encodeToString(stuName.trim().getBytes(), Base64.DEFAULT));
-                    informationBean.setNumber(Base64.encodeToString(stuXH.trim().getBytes(), Base64.DEFAULT));
-                    informationBean.setGender(Base64.encodeToString(personinformationlist.get(0).trim().getBytes(), Base64.DEFAULT));
-                    informationBean.setSchoolOfGraduation(Base64.encodeToString(personinformationlist.get(2).trim().getBytes(), Base64.DEFAULT));
-                    informationBean.setNation(Base64.encodeToString(personinformationlist.get(3).trim().getBytes(), Base64.DEFAULT));
-                    informationBean.setPoliticsStatus(Base64.encodeToString(personinformationlist.get(4).trim().getBytes(), Base64.DEFAULT));
-                    informationBean.setHometown(Base64.encodeToString(personinformationlist.get(5).trim().getBytes(), Base64.DEFAULT));
-                    informationBean.setIdNumber(Base64.encodeToString(personinformationlist.get(6).trim().getBytes(), Base64.DEFAULT));
-                    informationBean.setCollege(Base64.encodeToString(personinformationlist.get(7).trim().getBytes(), Base64.DEFAULT));
-                    informationBean.setClasses(Base64.encodeToString(personinformationlist.get(9).trim().getBytes(), Base64.DEFAULT));
-                    informationBean.setEnrollmentYear(Base64.encodeToString(personinformationlist.get(10).trim().getBytes(), Base64.DEFAULT));
-                    informationBean.setZaiDu(Base64.encodeToString(personinformationlist.get(11).trim().getBytes(), Base64.DEFAULT));
-                    informationBean.setPicture(Base64.encodeToString(personinformationlist.get(12).trim().getBytes(), Base64.DEFAULT));
+                    informationBean.setName(stuName.trim());
+                    informationBean.setNumber(stuXH.trim());
+                    informationBean.setGender(personinformationlist.get(0));
+                    informationBean.setSchoolOfGraduation(personinformationlist.get(2));
+                    informationBean.setNation(personinformationlist.get(3).trim());
+                    informationBean.setPoliticsStatus(personinformationlist.get(4).trim());
+                    informationBean.setHometown(personinformationlist.get(5).trim());
+                    informationBean.setIdNumber(personinformationlist.get(6).trim());
+                    informationBean.setCollege(personinformationlist.get(7).trim());
+                    informationBean.setClasses(personinformationlist.get(9).trim());
+                    informationBean.setEnrollmentYear(personinformationlist.get(10).trim());
+                    informationBean.setZaiDu(personinformationlist.get(11).trim());
+                    informationBean.setPicture(personinformationlist.get(12).trim());
                     BmobUser me = new BmobUser();
                     //此处应添加判断是否为HR
-                    Log.d("qqq", personinformationlist.get(9).replace("-", ""));
                   /*  BmobRole hr = new BmobRole("hr");
                     hr.getUsers().add(me);
                     hr.save();
@@ -479,6 +484,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         public void done(String s, BmobException e) {
                             if (e == null) {
                                 Toast.makeText(mContext, "添加数据成功，返回objectId为：" + s, Toast.LENGTH_LONG).show();
+                                StudentDao studentDaos = new StudentDao(mContext);
+                                studentDaos.add("ID",s);
                             } else {
                                 Toast.makeText(mContext, "创建数据失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
                                 Log.d("qqqw", e.getMessage());
@@ -555,6 +562,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_login:
+               if (password==null) {
+                   StudentDao studentDao = new StudentDao(mContext);
+                         studentDao.deleteAll();
+                    BaseInfoDao baseInfoDao=new BaseInfoDao(mContext);
+                         baseInfoDao.deleteAll();
+                   CourseDao courseDao=new CourseDao(mContext);
+                        courseDao.deleteAll();
+               }
+                if (password==null) {
+                if (Intenet||isFirstIn){
+                    startActivity(new Intent(mContext,CourseAcitivity.class));
+                }}
                 attemptLogin();
                break;
 

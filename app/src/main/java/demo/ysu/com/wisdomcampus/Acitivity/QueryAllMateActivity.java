@@ -85,9 +85,6 @@ public class QueryAllMateActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(View view, final int position)
                     {
-                        Toast.makeText(context, position + " click"+obj.get(position),
-                                Toast.LENGTH_SHORT).show();
-
                       final  LinearLayout dialogLayout=(LinearLayout) getLayoutInflater().inflate(R.layout.dialogitem,null);
                         new AlertDialog.Builder(context)
                                 .setIcon(R.mipmap.splash_background480)

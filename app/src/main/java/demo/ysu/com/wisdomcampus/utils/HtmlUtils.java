@@ -15,12 +15,7 @@ import demo.ysu.com.wisdomcampus.ScoreBean;
 
 import static android.content.ContentValues.TAG;
 
-/**
- * 对url中的中文编码
- *
- * @author Hugo
- * Created on 2016/4/21 12:01.
- */
+
 
 
 public class HtmlUtils {
@@ -42,9 +37,8 @@ public class HtmlUtils {
     }
 
     public String getVIEWSTATE2(){
-        Log.d("TAG100","WWW"+response);
         String text=response.substring(response.indexOf("__VIEWSTATE")+20,response.indexOf("__VIEWSTATE")+1776+20);
-        Log.d("TAG100","WWW"+text);
+        Log.d("VIEWSTATE2","WWW"+text);
         return  text;
 
     }
@@ -54,11 +48,6 @@ public class HtmlUtils {
     public String getVIEWSTATE(){
         String text=response.substring(response.indexOf("__VIEWSTATE")+20,response.indexOf("__VIEWSTATE")+20+48);
         Log.d(TAG,text);
-        return  text;
-    }
-    public String getVIEWSTATEGENERATOR(){
-        String text=response.substring(response.indexOf("__VIEWSTATEGENERATOR")+30,response.indexOf("__VIEWSTATEGENERATOR")+30+15);
-        Log.d("__VIEWSTATEGENERATOR",text);
         return  text;
     }
    public List<ScoreBean> parseScore() {
@@ -71,6 +60,9 @@ public class HtmlUtils {
             Elements tds = trs.get(i).select("td");
             for (int j = 0; j < tds.size(); j++) {
                 switch (j) {
+                    case 1:
+                        bean.setCourseXQ(tds.get(j).text());
+                        break;
                     case 2:
                         bean.setCourseId(tds.get(j).text());
                         break;
@@ -80,11 +72,17 @@ public class HtmlUtils {
                     case 4:
                         bean.setCourseXz(tds.get(j).text());
                         break;
+                    case 5:
+                        bean.setCourseGs(tds.get(j).text()+"");
+                        break;
+                    case 6:
+                        bean.setCourseXf(tds.get(j).text());
+                        break;
                     case 7:
                         bean.setCourseCj(tds.get(j).text());
                         break;
-                    case 5:
-                        bean.setCourseGs(tds.get(j).text());
+                    case 8:
+                        bean.setCourseBj(tds.get(j).text());
                         break;
                     case 9:
                         bean.setCourseBk(tds.get(j).text());
@@ -92,11 +90,17 @@ public class HtmlUtils {
                     case 10:
                         bean.setCourseCx(tds.get(j).text());
                         break;
-                    case 6:
-                        bean.setCourseXf(tds.get(j).text());
+                    case 11:
+                        bean.setCourseXY(tds.get(j).text());
                         break;
-                    case 8:
-                        bean.setCourseBj(tds.get(j).text());
+                    case 12:
+                        bean.setCourseBZ(tds.get(j).text());
+                        break;
+                    case 13:
+                        bean.setCourseXW(tds.get(j).text());
+                        break;
+                    case 14:
+                        bean.setCourseBJ(tds.get(j).text());
                         break;
                     default:break;
                 }
@@ -104,26 +108,6 @@ public class HtmlUtils {
             scoreList.add(bean);
         }
         return scoreList;
-    }
-
-    /**
-     * 返回成绩查询页面的年份集合
-     *
-     * @return
-     */
-    public List<String> parseSelectYearList() {
-        Document document = Jsoup.parse(response);
-        Element select = document.getElementById("ddlXN");
-        Elements options = select.select("option");
-        List<String> tempList = new ArrayList<>();
-        List<String> yearList = new ArrayList<>();
-        for (Element option : options) {
-            tempList.add(option.text());
-        }
-        for (int j = tempList.size() - 1; j > 0; j--) {
-            yearList.add(tempList.get(j));
-        }
-        return yearList;
     }
 
 }
