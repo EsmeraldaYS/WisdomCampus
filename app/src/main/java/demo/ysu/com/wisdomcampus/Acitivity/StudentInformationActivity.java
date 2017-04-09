@@ -107,4 +107,5 @@ public class StudentInformationActivity extends AppCompatActivity {
         recycleAdapter=new MyRecyclerViewAdapter(context,mDatas);
         mrecyclerView.setAdapter( recycleAdapter);
 
+
 }}

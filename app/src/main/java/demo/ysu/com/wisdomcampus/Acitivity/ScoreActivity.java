@@ -88,7 +88,9 @@ private  String stuNameEncoding;
 
     private void initData() {
         BaseInfoDao baseInfoDao = new BaseInfoDao(mContext);
+
         cjcxUrl = baseInfoDao.query("cjcxUrl").replace("xscj","xscj_gc");
+        Log.d("QAW",cjcxUrl);
         stuCenterUrl = baseInfoDao.query("StuCenterUrl");
         noCodeLoginUrl = baseInfoDao.query("noCodeLoginUrl");
          xm=baseInfoDao.query("stuName");

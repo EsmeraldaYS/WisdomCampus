@@ -8,10 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author Hugo
- * Created on 2016/4/24 0:16.
- */
+
 public class BaseInfoDao {
     private Context mContext;
 

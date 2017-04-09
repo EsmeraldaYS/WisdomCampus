@@ -11,10 +11,7 @@ import java.util.List;
 import demo.ysu.com.wisdomcampus.CourseBean;
 
 
-/**
- * @author Hugo
- * Created on 2016/4/24 10:16.
- */
+
 public class CourseDao {
     private Context mContext;
     private CourseBean course;

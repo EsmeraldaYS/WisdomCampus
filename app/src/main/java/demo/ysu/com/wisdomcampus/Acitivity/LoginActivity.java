@@ -1,10 +1,10 @@
 package demo.ysu.com.wisdomcampus.Acitivity;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -41,7 +41,10 @@ import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import demo.ysu.com.wisdomcampus.CourseBean;
 import demo.ysu.com.wisdomcampus.DB.BaseInfoDao;
+import demo.ysu.com.wisdomcampus.DB.BaseInfoHelper;
 import demo.ysu.com.wisdomcampus.DB.CourseDao;
+import demo.ysu.com.wisdomcampus.DB.CourseHelper;
+import demo.ysu.com.wisdomcampus.DB.MySQLiteOpenHelper;
 import demo.ysu.com.wisdomcampus.DB.StudentDao;
 import demo.ysu.com.wisdomcampus.InformationBean;
 import demo.ysu.com.wisdomcampus.R;
@@ -96,7 +99,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private String stuName;
     private SharedPreferences sp;
     private String stuNameEncoding;
-    private ProgressDialog waitDialog;
+    //private ProgressDialog waitDialog;
     boolean Intenet;
     boolean isFirstIn;
     @Override
@@ -126,10 +129,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void initData() {
         sp = SpUtil.getSp(mContext, "config");
         sp.edit().putBoolean("wherein", false).apply();
-        String ath = "file://android_asset/xll.xlsx";
     }
 
-    /*
+         /*
           * 获取VIEWSTATE，网页如果没有最新的VIEWSTATE参数会重定向,(我也不知道是不是重定向)
           * */
     private void initListener() {
@@ -271,14 +273,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void showSaveDataDialog(String response) {
 
-        waitDialog = new ProgressDialog(mContext);
+   /*     waitDialog = new ProgressDialog(mContext);
         waitDialog.setTitle("请稍后");
         waitDialog.setMessage("Loading...");
-        waitDialog.show();
+        waitDialog.show();*/
         initURL(response);
         enterTheSecond(StuCenterUrl);
         getThePersonalInformation(  piUrl);
-        saveDataToDB();
+        //saveDataToDB();
 
     }
 
@@ -323,7 +325,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     @Override
                     public void onResponse(String response) {
-                       Log.d(WWW,response);
                         initCourseData(stuXH);
                     }
                 });
@@ -385,6 +386,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     String courseTeacher = course.getCourseTeacher();
                                     String courseLocation = course.getCourseLocation();
                                     boolean isSucess = courseDao.add(courseName, courseTime, courstTimeDetail, courseTeacher, courseLocation);
+                                    CourseHelper helper = new CourseHelper(mContext, 1);
+                                    SQLiteDatabase db = helper.getWritableDatabase();
+                                    db.close();
+                                    db=null;
+                                    helper=null;
                                     if (!isSucess) {
                                         saveSucess = false;
                                         Toast.makeText(mContext, "保存课表失败", Toast.LENGTH_SHORT).show();
@@ -439,38 +445,42 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Log.v("NO3","个人同步失败");}
                 else {
 
-                   StudentDao studentDao = new StudentDao(mContext);
-                    studentDao.deleteAll();
-                    studentDao.add("lbl_xb", personinformationlist.get(0));
+                    StudentDao studentDao = new StudentDao(mContext);
 
-                    studentDao.add("lbl_byzx", personinformationlist.get(2));
-                    studentDao.add("lbl_mz", personinformationlist.get(3));
-                    studentDao.add("lbl_zzmm", personinformationlist.get(4));
-                    studentDao.add("lbl_lys", personinformationlist.get(5));
-                    studentDao.add("lbl_sfzh", personinformationlist.get(6));
-                    studentDao.add("lbl_xy", personinformationlist.get(7));
-                    studentDao.add("lbl_zymc", personinformationlist.get(8));
-                    studentDao.add("lbl_xzb", personinformationlist.get(9));
-                    studentDao.add("lbl_dqszj", personinformationlist.get(10));
-                    studentDao.add("lbl_xjzt", personinformationlist.get(11));
-                    studentDao.add("zp", personinformationlist.get(12));
+                    String d=studentDao.query("stuXH");
+                    if (d==null) {
+                        if (userId.equals(d)) {
+                            Log.d("studentdao", d + "8");
+                            studentDao.add("lbl_xb", personinformationlist.get(0));
+
+                            studentDao.add("lbl_byzx", personinformationlist.get(2));
+                            studentDao.add("lbl_mz", personinformationlist.get(3));
+                            studentDao.add("lbl_zzmm", personinformationlist.get(4));
+                            studentDao.add("lbl_lys", personinformationlist.get(5));
+                            studentDao.add("lbl_sfzh", personinformationlist.get(6));
+                            studentDao.add("lbl_xy", personinformationlist.get(7));
+                            studentDao.add("lbl_zymc", personinformationlist.get(8));
+                            studentDao.add("lbl_xzb", personinformationlist.get(9));
+                            studentDao.add("lbl_dqszj", personinformationlist.get(10));
+                            studentDao.add("lbl_xjzt", personinformationlist.get(11));
+                            studentDao.add("zp", personinformationlist.get(12));
 
 
-                    informationBean.setName(stuName.trim());
-                    informationBean.setNumber(stuXH.trim());
-                    informationBean.setGender(personinformationlist.get(0));
-                    informationBean.setSchoolOfGraduation(personinformationlist.get(2));
-                    informationBean.setNation(personinformationlist.get(3).trim());
-                    informationBean.setPoliticsStatus(personinformationlist.get(4).trim());
-                    informationBean.setHometown(personinformationlist.get(5).trim());
-                    informationBean.setIdNumber(personinformationlist.get(6).trim());
-                    informationBean.setCollege(personinformationlist.get(7).trim());
-                    informationBean.setClasses(personinformationlist.get(9).trim());
-                    informationBean.setEnrollmentYear(personinformationlist.get(10).trim());
-                    informationBean.setZaiDu(personinformationlist.get(11).trim());
-                    informationBean.setPicture(personinformationlist.get(12).trim());
-                    BmobUser me = new BmobUser();
-                    //此处应添加判断是否为HR
+                            informationBean.setName(stuName.trim());
+                            informationBean.setNumber(stuXH.trim());
+                            informationBean.setGender(personinformationlist.get(0));
+                            informationBean.setSchoolOfGraduation(personinformationlist.get(2));
+                            informationBean.setNation(personinformationlist.get(3).trim());
+                            informationBean.setPoliticsStatus(personinformationlist.get(4).trim());
+                            informationBean.setHometown(personinformationlist.get(5).trim());
+                            informationBean.setIdNumber(personinformationlist.get(6).trim());
+                            informationBean.setCollege(personinformationlist.get(7).trim());
+                            informationBean.setClasses(personinformationlist.get(9).trim());
+                            informationBean.setEnrollmentYear(personinformationlist.get(10).trim());
+                            informationBean.setZaiDu(personinformationlist.get(11).trim());
+                            informationBean.setPicture(personinformationlist.get(12).trim());
+                            BmobUser me = new BmobUser();
+                            //此处应添加判断是否为HR
                   /*  BmobRole hr = new BmobRole("hr");
                     hr.getUsers().add(me);
                     hr.save();
@@ -479,42 +489,46 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     BmobACL acl = new BmobACL();
                     acl.setRoleReadAccess(hr, true);
                     informationBean.setACL(acl);*/
-                    informationBean.save(new SaveListener<String>() {
-                        @Override
-                        public void done(String s, BmobException e) {
-                            if (e == null) {
-                                Toast.makeText(mContext, "添加数据成功，返回objectId为：" + s, Toast.LENGTH_LONG).show();
-                                StudentDao studentDaos = new StudentDao(mContext);
-                                studentDaos.add("ID",s);
-                            } else {
-                                Toast.makeText(mContext, "创建数据失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
-                                Log.d("qqqw", e.getMessage());
-                            }
-                        }
-                    });
-                    BmobQuery<InformationBean> query = new BmobQuery<InformationBean>();
-                    query.addWhereEqualTo("classes", personinformationlist.get(9).trim());
-                    query.setLimit(50);
-                    query.findObjects(new FindListener<InformationBean>() {
-                        @Override
-                        public void done(List<InformationBean> list, BmobException e) {
-                            if (e == null) {
-                                Log.d("ppp", "查询成功：共" + list.size() + "条数据。");
-                                for (InformationBean gameScore : list) {
-                                    //获得playerName的信息
-                                    gameScore.getName();
-                                    //获得数据的objectId信息
-                                    gameScore.getObjectId();
-                                    //获得createdAt数据创建时间（注意是：createdAt，不是createAt）
-                                    gameScore.getCreatedAt();
+                            informationBean.save(new SaveListener<String>() {
+                                @Override
+                                public void done(String s, BmobException e) {
+                                    if (e == null) {
+                                        Toast.makeText(mContext, "添加数据成功，返回objectId为：" + s, Toast.LENGTH_LONG).show();
+                                        StudentDao studentDaos = new StudentDao(mContext);
+                                        studentDaos.add("ID", s);
+                                        MySQLiteOpenHelper helper = new MySQLiteOpenHelper(mContext);
+                                        SQLiteDatabase db = helper.getWritableDatabase();
+                                        db.close();
+                                    } else {
+                                        Toast.makeText(mContext, "创建数据失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                        Log.d("qqqw", e.getMessage());
+                                    }
                                 }
-                            } else {
-                                Log.i("ppp", "失败：" + e.getMessage() + "," + e.getErrorCode());
-                            }
+                            });
+                            BmobQuery<InformationBean> query = new BmobQuery<InformationBean>();
+                            query.addWhereEqualTo("classes", personinformationlist.get(9).trim());
+                            query.setLimit(50);
+                            query.findObjects(new FindListener<InformationBean>() {
+                                @Override
+                                public void done(List<InformationBean> list, BmobException e) {
+                                    if (e == null) {
+                                        Log.d("ppp", "查询成功：共" + list.size() + "条数据。");
+                                        for (InformationBean gameScore : list) {
+                                            //获得playerName的信息
+                                            gameScore.getName();
+                                            //获得数据的objectId信息
+                                            gameScore.getObjectId();
+                                            //获得createdAt数据创建时间（注意是：createdAt，不是createAt）
+                                            gameScore.getCreatedAt();
+                                        }
+                                    } else {
+                                        Log.i("ppp", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                                    }
+                                }
+                            });
                         }
-                    });
 
-
+                    }
                 }
             }
         });
@@ -528,7 +542,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void saveDataToDB() {
         //基本信息
         BaseInfoDao baseInfoDao = new BaseInfoDao(mContext);
-        baseInfoDao.deleteAll();
+        String stunmaefromdb=baseInfoDao.query("stuName");
+        String stuxhfromdb=baseInfoDao.query("stuXH");
+        if(stunmaefromdb!=null&&stuxhfromdb!=null){
+            if (!stuName.equals(stunmaefromdb)&&!stuXH.equals(stuxhfromdb)){
+                baseInfoDao.deleteAll();
         baseInfoDao.add("cjcxUrl", LoginActivity.cjcxUrl);
         baseInfoDao.add("kbcxUrl", LoginActivity.kbcxUrl);
         baseInfoDao.add("kscxUrl", LoginActivity.kscxUrl);
@@ -540,12 +558,33 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         baseInfoDao.add("mainUrl", mainUrl);
         baseInfoDao.add("logoutUrl", logoutUrl);
         baseInfoDao.add("password", password);
+        }
+        }else {
+                baseInfoDao.add("cjcxUrl", LoginActivity.cjcxUrl);
+                baseInfoDao.add("kbcxUrl", LoginActivity.kbcxUrl);
+                baseInfoDao.add("kscxUrl", LoginActivity.kscxUrl);
+                baseInfoDao.add("StuCenterUrl", StuCenterUrl);
+                baseInfoDao.add("stuName", stuName);
+                baseInfoDao.add("stuXH", stuXH);
+                baseInfoDao.add("noCodeLoginUrl", noCodeLoginUrl);
+                baseInfoDao.add("stuXH", stuXH);
+                baseInfoDao.add("mainUrl", mainUrl);
+                baseInfoDao.add("logoutUrl", logoutUrl);
+                baseInfoDao.add("password", password);
+
+        }
+
+        BaseInfoHelper helper = new BaseInfoHelper(mContext);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        stunmaefromdb=null;
+        stuxhfromdb=null;
+        db.close();
         //学生基本信息
         boolean saveSucess = true;
         //数据保存成功
         if (saveSucess) {
             sp.edit().putBoolean("isFirstIn", false).apply();
-            waitDialog.dismiss();
+            //waitDialog.dismiss();
             Intent intent3=new Intent(mContext,CourseAcitivity.class);
             startActivity(intent3);
         }
@@ -562,18 +601,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_login:
-               if (password==null) {
-                   StudentDao studentDao = new StudentDao(mContext);
-                         studentDao.deleteAll();
-                    BaseInfoDao baseInfoDao=new BaseInfoDao(mContext);
-                         baseInfoDao.deleteAll();
-                   CourseDao courseDao=new CourseDao(mContext);
-                        courseDao.deleteAll();
-               }
                 if (password==null) {
-                if (Intenet||isFirstIn){
+                    Log.d("ceshia", String.valueOf(!Intenet));
+                if (!Intenet){
+                    Log.d("ceshia", String.valueOf(!isFirstIn));
+                    if (!isFirstIn){
                     startActivity(new Intent(mContext,CourseAcitivity.class));
-                }}
+                }}}
                 attemptLogin();
                break;
 
@@ -589,11 +623,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onDestroy() {
         super.onDestroy();
-       BaseInfoDao baseInfoDao=new BaseInfoDao(mContext);
-        baseInfoDao.deleteAll();
-        StudentDao studentDao=new StudentDao(mContext);
-        studentDao.deleteAll();
         RequestCall call = OkHttpUtils.get().url(kbcxUrl).build();
+        call.cancel();
+        call= OkHttpUtils.get().url(piUrl).build();
+        call.cancel();
+        call= OkHttpUtils.get().url("http://202.206.245.231/zjdxgc/default2.aspx").build();
+        call.cancel();
+        call= OkHttpUtils.get().url("loginUrl").build();
+        call.cancel();
+        call= OkHttpUtils.get().url("StuCenterUrl").build();
         call.cancel();
     }
 

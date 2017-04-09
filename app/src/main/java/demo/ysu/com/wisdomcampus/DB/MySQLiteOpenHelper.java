@@ -4,9 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-/**
- * Created by Carson_Ho on 16/11/18.
- */
 public class MySQLiteOpenHelper extends SQLiteOpenHelper {
 
 
@@ -20,7 +17,7 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table PersonInformation(_id integer primary key autoincrement,key varchar(50) UNIQUE,value varchar(200))");
+        db.execSQL("create table PersonInformation(_id integer primary key autoincrement,key varchar(50),value varchar(200) UNIQUE)");
     }
 
     @Override
