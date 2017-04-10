@@ -299,7 +299,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         stuName = split[0].replace("同学", "");
 
         stuNameEncoding = TextEncoderUtils.encoding(stuName);
-         Log.d("WTY2",WWW+stuNameEncoding);
         cjcxUrl = cjcxUrl.replace("stuxh", stuXH).replace("stuname", stuNameEncoding);
         kbcxUrl = kbcxUrl.replace("stuxh", stuXH).replace("stuname", stuNameEncoding);
         kscxUrl = kscxUrl.replace("stuxh", stuXH).replace("stuname", stuNameEncoding);
@@ -444,13 +443,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Toast.makeText(mContext, "个人信息同步失败,可能需要评分", Toast.LENGTH_LONG).show();
                     Log.v("NO3","个人同步失败");}
                 else {
-
+                    BaseInfoDao baseInfoDao = new BaseInfoDao(mContext);
                     StudentDao studentDao = new StudentDao(mContext);
 
-                    String d=studentDao.query("stuXH");
-                    if (d==null) {
-                        if (userId.equals(d)) {
-                            Log.d("studentdao", d + "8");
+                    String d=baseInfoDao.query("stuXH");
+                    Log.d("studentdao", d + "8");
+
+                    if (d!=null) {
+/*
+   第二次进入
+*/
+                        if (!userId.equals(d)) {
+                            /*
+                            * 他人登录
+                            * */
+                            studentDao.deleteAll();
+                            Log.d("studentdao", d + "他人登录");
                             studentDao.add("lbl_xb", personinformationlist.get(0));
 
                             studentDao.add("lbl_byzx", personinformationlist.get(2));
@@ -526,9 +534,91 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     }
                                 }
                             });
+                        }else{     Log.d("studentdao", d + "这人第二次登录");
+                        /*
+                        * 这人第二次登录
+                        * */
                         }
 
-                    }
+                    }else {
+                        Log.d("studentdao", d + "这人第一次登录");
+                        studentDao.deleteAll();
+                        Log.d("studentdao", d + "8");
+                        studentDao.add("lbl_xb", personinformationlist.get(0));
+
+                        studentDao.add("lbl_byzx", personinformationlist.get(2));
+                        studentDao.add("lbl_mz", personinformationlist.get(3));
+                        studentDao.add("lbl_zzmm", personinformationlist.get(4));
+                        studentDao.add("lbl_lys", personinformationlist.get(5));
+                        studentDao.add("lbl_sfzh", personinformationlist.get(6));
+                        studentDao.add("lbl_xy", personinformationlist.get(7));
+                        studentDao.add("lbl_zymc", personinformationlist.get(8));
+                        studentDao.add("lbl_xzb", personinformationlist.get(9));
+                        studentDao.add("lbl_dqszj", personinformationlist.get(10));
+                        studentDao.add("lbl_xjzt", personinformationlist.get(11));
+                        studentDao.add("zp", personinformationlist.get(12));
+
+
+                        informationBean.setName(stuName.trim());
+                        informationBean.setNumber(stuXH.trim());
+                        informationBean.setGender(personinformationlist.get(0));
+                        informationBean.setSchoolOfGraduation(personinformationlist.get(2));
+                        informationBean.setNation(personinformationlist.get(3).trim());
+                        informationBean.setPoliticsStatus(personinformationlist.get(4).trim());
+                        informationBean.setHometown(personinformationlist.get(5).trim());
+                        informationBean.setIdNumber(personinformationlist.get(6).trim());
+                        informationBean.setCollege(personinformationlist.get(7).trim());
+                        informationBean.setClasses(personinformationlist.get(9).trim());
+                        informationBean.setEnrollmentYear(personinformationlist.get(10).trim());
+                        informationBean.setZaiDu(personinformationlist.get(11).trim());
+                        informationBean.setPicture(personinformationlist.get(12).trim());
+                        BmobUser me = new BmobUser();
+                        //此处应添加判断是否为HR
+                  /*  BmobRole hr = new BmobRole("hr");
+                    hr.getUsers().add(me);
+                    hr.save();
+                    BmobRole Normals=new BmobRole("Normals");
+                    Normals.save();
+                    BmobACL acl = new BmobACL();
+                    acl.setRoleReadAccess(hr, true);
+                    informationBean.setACL(acl);*/
+                        informationBean.save(new SaveListener<String>() {
+                            @Override
+                            public void done(String s, BmobException e) {
+                                if (e == null) {
+                                    Toast.makeText(mContext, "添加数据成功，返回objectId为：" + s, Toast.LENGTH_LONG).show();
+                                    StudentDao studentDaos = new StudentDao(mContext);
+                                    studentDaos.add("ID", s);
+                                    MySQLiteOpenHelper helper = new MySQLiteOpenHelper(mContext);
+                                    SQLiteDatabase db = helper.getWritableDatabase();
+                                    db.close();
+                                } else {
+                                    Toast.makeText(mContext, "创建数据失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                    Log.d("qqqw", e.getMessage());
+                                }
+                            }
+                        });
+                        BmobQuery<InformationBean> query = new BmobQuery<InformationBean>();
+                        query.addWhereEqualTo("classes", personinformationlist.get(9).trim());
+                        query.setLimit(50);
+                        query.findObjects(new FindListener<InformationBean>() {
+                            @Override
+                            public void done(List<InformationBean> list, BmobException e) {
+                                if (e == null) {
+                                    Log.d("ppp", "查询成功：共" + list.size() + "条数据。");
+                                    for (InformationBean gameScore : list) {
+                                        //获得playerName的信息
+                                        gameScore.getName();
+                                        //获得数据的objectId信息
+                                        gameScore.getObjectId();
+                                        //获得createdAt数据创建时间（注意是：createdAt，不是createAt）
+                                        gameScore.getCreatedAt();
+                                    }
+                                } else {
+                                    Log.i("ppp", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                                }
+                            }
+                        });}
                 }
             }
         });
@@ -546,6 +636,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String stuxhfromdb=baseInfoDao.query("stuXH");
         if(stunmaefromdb!=null&&stuxhfromdb!=null){
             if (!stuName.equals(stunmaefromdb)&&!stuXH.equals(stuxhfromdb)){
+
+                /*
+                * 别人登录
+                * */
+                Log.d("WQE","别人登录");
+                StudentDao studentDao=new StudentDao(mContext);
+                studentDao.deleteAll();
+                CourseDao courseDao=new CourseDao(mContext);
+                courseDao.deleteAll();
                 baseInfoDao.deleteAll();
         baseInfoDao.add("cjcxUrl", LoginActivity.cjcxUrl);
         baseInfoDao.add("kbcxUrl", LoginActivity.kbcxUrl);
@@ -558,8 +657,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         baseInfoDao.add("mainUrl", mainUrl);
         baseInfoDao.add("logoutUrl", logoutUrl);
         baseInfoDao.add("password", password);
-        }
         }else {
+                /*
+                * 第二次登录
+                * */ Log.d("WQE","第二次登录");
+
+
+            }
+        }else {
+
+            /*
+            * 第一次进入
+            * */
+            Log.d("WQE","第一次进入");
                 baseInfoDao.add("cjcxUrl", LoginActivity.cjcxUrl);
                 baseInfoDao.add("kbcxUrl", LoginActivity.kbcxUrl);
                 baseInfoDao.add("kscxUrl", LoginActivity.kscxUrl);
