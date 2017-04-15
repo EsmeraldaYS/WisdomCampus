@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,7 +44,7 @@ import demo.ysu.com.wisdomcampus.utils.SpUtil;
 public class CourseAcitivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
 
 
-
+    private static boolean isExit = false;
    private RecyclerView couseList;
 
    private TextView tvNullCourse;
@@ -65,6 +66,7 @@ public class CourseAcitivity extends AppCompatActivity implements NavigationView
     private List<CourseBean> allCourse;
     private static List<CourseBean> startList;
    private StudentDao studentDao;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,6 +139,7 @@ public class CourseAcitivity extends AppCompatActivity implements NavigationView
     }
 
     private void initUI() {
+
         header_name.setText(stuName);
         header_xh.setText(stuXH);
         if (allCourse.size() == 0) {
@@ -193,7 +196,7 @@ public class CourseAcitivity extends AppCompatActivity implements NavigationView
     private void showLogoutDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle("注销登录");
-        builder.setMessage("注销登录会清除已保存的课表数据...");
+        builder.setMessage("注销"+"\r\n"+"登录会清除已保存的课表数据");
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -211,14 +214,14 @@ public class CourseAcitivity extends AppCompatActivity implements NavigationView
                 finish();
             }
         });
-        builder.setNegativeButton("cancle", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
         builder.show();
-        Toast.makeText(getApplicationContext(),"error ",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(),"error ",Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -286,7 +289,7 @@ public class CourseAcitivity extends AppCompatActivity implements NavigationView
         } else if (id == R.id.nav_settings) {
             //设置
             handler.sendEmptyMessageDelayed(4, 500);
-            Toast.makeText(getApplicationContext(),"error ",Toast.LENGTH_SHORT).show();
+           // Toast.makeText(getApplicationContext(),"error ",Toast.LENGTH_SHORT).show();
         } /*else if (id == R.id.nav_share) {
             //分享
             shareApp();
@@ -296,21 +299,60 @@ public class CourseAcitivity extends AppCompatActivity implements NavigationView
         return true;
     }
 
-
+    private long exitTime = 0;
     @Override
     public void onBackPressed() {
      super.onBackPressed();
+      /*  Log.d("TRA","TAES");
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            if ((System.currentTimeMillis() - exitTime) > 2000) {
+                //弹出提示，可以有多种方式
+                Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                exitTime = System.currentTimeMillis();
+            } else {
+                finish();
+            }
             //让返回键实现home键的功能
-            Intent i = new Intent(Intent.ACTION_MAIN);
+          *//*  Intent i = new Intent(Intent.ACTION_MAIN);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             i.addCategory(Intent.CATEGORY_HOME);
-            startActivity(i);
+            startActivity(i);*//*
+        }*/
+    }
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            }
+            exit();
+            return false;
         }
+        return super.onKeyDown(keyCode, event);
     }
 
+    Handler mHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            isExit = false;
+        }
+    };
+
+    private void exit() {
+        if (!isExit) {
+            isExit = true;
+            Toast.makeText(getApplicationContext(), "再按一次退出程序",
+                    Toast.LENGTH_SHORT).show();
+            // 利用handler延迟发送更改状态信息
+            mHandler.sendEmptyMessageDelayed(0, 2000);
+        } else {
+            finish();
+            System.exit(0);
+        }
+    }
 
     @Override
     protected void onDestroy() {

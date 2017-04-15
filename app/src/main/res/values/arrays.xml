@@ -11,4 +11,16 @@
         <item>按学年查询</item>
         <item>在校学习成绩</item>
     </string-array>
+    <array name="anim">
+        <item>燕山大学首届“燕园之星”校园形象大使大赛落幕</item>
+        <item>陆相油田储层评价与动态监测关键技术研究及装备开发”科技成果评价会在燕山大学召开</item>
+        <item>赵丁选教授主持召开国家重点研发计划项目调度会</item>
+        <item>校党委书记孟卫东率队赴常州科教城等地学习调研</item>
+        <item>燕山大学第五届DIY达人赛开赛</item>
+        <item>燕山大学首届软件创意‖开发大赛开始啦</item>
+
+
+
+
+    </array>
 </resources>

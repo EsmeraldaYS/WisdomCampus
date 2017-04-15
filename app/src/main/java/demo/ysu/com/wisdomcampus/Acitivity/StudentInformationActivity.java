@@ -27,7 +27,7 @@ import demo.ysu.com.wisdomcampus.R;
 
 public class StudentInformationActivity extends AppCompatActivity {
     private RecyclerView mrecyclerView;
-    private String Url = "http://202.206.245.225/zjdxgc/C";
+    private String Url = "http://202.206.245.231/zjdxgc/c";
     private Context mContext = this;
     private ArrayList<String> mDatas=new ArrayList<String>();
     private MyRecyclerViewAdapter recycleAdapter;
@@ -84,8 +84,8 @@ public class StudentInformationActivity extends AppCompatActivity {
     private void initData() {
         StudentDao studentDao=new StudentDao(mContext);
         mDatas=studentDao.queryAll();
-        Log.d("Wes",mDatas.get(mDatas.size()-2));
-        OkHttpUtils.get().url(Url.replace("C",mDatas.get(mDatas.size()-2))).build()
+        mDatas.remove(mDatas.size()-1);
+        OkHttpUtils.get().url(Url.replace("c",mDatas.get(mDatas.size()-2))).build()
                 .connTimeOut(5000)
                 .execute(new BitmapCallback() {
                     @Override
@@ -99,6 +99,8 @@ public class StudentInformationActivity extends AppCompatActivity {
                         zhaopian.setImageBitmap(response);
                     }
                 });
+        mDatas.remove(mDatas.size()-2);
+        mDatas.remove(mDatas.size()-2);
         mrecyclerView=(RecyclerView)findViewById(R.id.recye);
         mlinearLayoutManager=new LinearLayoutManager(mContext);
         mrecyclerView.setLayoutManager(mlinearLayoutManager);

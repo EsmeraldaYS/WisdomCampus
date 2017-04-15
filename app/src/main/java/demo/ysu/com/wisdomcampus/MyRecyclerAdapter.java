@@ -33,12 +33,22 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
         inflater= LayoutInflater.from(mContext);
     }
 
+
     @Override
     public int getItemCount() {
 
         return mDatas.size();
     }
 
+    private OnItemClickListener onItemClickListener;
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
     //填充onCreateViewHolder方法返回的holder中的控件
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
@@ -50,6 +60,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
                 .error(R.drawable.ic_load_fail)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.imageView);
+
     }
 
     //重写onCreateViewHolder方法，返回一个自定义的ViewHolder
@@ -61,7 +72,7 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
         return holder;
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
+    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView tv;
        ImageView imageView;
@@ -69,7 +80,21 @@ public class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.My
             super(view);
             tv=(TextView) view.findViewById(R.id.newtext);
             imageView=(ImageView) view.findViewById(R.id.newimag);
+            tv.setOnClickListener(this);
+            imageView.setOnClickListener(this);
         }
 
+        @Override
+        public void onClick(View view) {
+            if (view.getId() == R.id.newtext) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(view, getAdapterPosition());
+                }
+                if (view.getId() == R.id.newimag) {
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onItemClick(view, getAdapterPosition());
+                    }
+
+        }
     }
-}
+}}}

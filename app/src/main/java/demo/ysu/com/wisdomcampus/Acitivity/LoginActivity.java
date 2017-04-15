@@ -48,6 +48,7 @@ import demo.ysu.com.wisdomcampus.DB.MySQLiteOpenHelper;
 import demo.ysu.com.wisdomcampus.DB.StudentDao;
 import demo.ysu.com.wisdomcampus.InformationBean;
 import demo.ysu.com.wisdomcampus.R;
+import demo.ysu.com.wisdomcampus.TheFirstActivity;
 import demo.ysu.com.wisdomcampus.utils.HtmlUtils;
 import demo.ysu.com.wisdomcampus.utils.ParseCourses;
 import demo.ysu.com.wisdomcampus.utils.PersonInformationUtil;
@@ -446,7 +447,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     BaseInfoDao baseInfoDao = new BaseInfoDao(mContext);
                     StudentDao studentDao = new StudentDao(mContext);
 
-                    String d=baseInfoDao.query("stuXH");
+                    String d=studentDao.query("stuXH");
                     Log.d("studentdao", d + "8");
 
                     if (d!=null) {
@@ -472,7 +473,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             studentDao.add("lbl_dqszj", personinformationlist.get(10));
                             studentDao.add("lbl_xjzt", personinformationlist.get(11));
                             studentDao.add("zp", personinformationlist.get(12));
-
+                            studentDao.add("stuXH",stuXH);
 
                             informationBean.setName(stuName.trim());
                             informationBean.setNumber(stuXH.trim());
@@ -534,14 +535,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     }
                                 }
                             });
-                        }else{     Log.d("studentdao", d + "这人第二次登录");
+                        }else{
+                            Log.d("studentdao", d + "这人第二次登录");
                         /*
                         * 这人第二次登录
                         * */
                         }
 
                     }else {
-                        Log.d("studentdao", d + "这人第一次登录");
+                        Log.d("studentdao", d + "第一次登录");
                         studentDao.deleteAll();
                         Log.d("studentdao", d + "8");
                         studentDao.add("lbl_xb", personinformationlist.get(0));
@@ -557,7 +559,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         studentDao.add("lbl_dqszj", personinformationlist.get(10));
                         studentDao.add("lbl_xjzt", personinformationlist.get(11));
                         studentDao.add("zp", personinformationlist.get(12));
-
+                        studentDao.add("stuXH",stuXH);
 
                         informationBean.setName(stuName.trim());
                         informationBean.setNumber(stuXH.trim());
@@ -653,7 +655,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         baseInfoDao.add("stuName", stuName);
         baseInfoDao.add("stuXH", stuXH);
         baseInfoDao.add("noCodeLoginUrl", noCodeLoginUrl);
-        baseInfoDao.add("stuXH", stuXH);
         baseInfoDao.add("mainUrl", mainUrl);
         baseInfoDao.add("logoutUrl", logoutUrl);
         baseInfoDao.add("password", password);
@@ -677,7 +678,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 baseInfoDao.add("stuName", stuName);
                 baseInfoDao.add("stuXH", stuXH);
                 baseInfoDao.add("noCodeLoginUrl", noCodeLoginUrl);
-                baseInfoDao.add("stuXH", stuXH);
                 baseInfoDao.add("mainUrl", mainUrl);
                 baseInfoDao.add("logoutUrl", logoutUrl);
                 baseInfoDao.add("password", password);
@@ -695,7 +695,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (saveSucess) {
             sp.edit().putBoolean("isFirstIn", false).apply();
             //waitDialog.dismiss();
-            Intent intent3=new Intent(mContext,CourseAcitivity.class);
+            Intent intent3=new Intent(mContext,TheFirstActivity.class);
             startActivity(intent3);
         }
 
@@ -713,11 +713,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.bt_login:
                 if (password==null) {
                     Log.d("ceshia", String.valueOf(!Intenet));
-                if (!Intenet){
-                    Log.d("ceshia", String.valueOf(!isFirstIn));
                     if (!isFirstIn){
-                    startActivity(new Intent(mContext,CourseAcitivity.class));
-                }}}
+                        isFirstIn=false;
+                    startActivity(new Intent(mContext,TheFirstActivity.class));
+                }}
                 attemptLogin();
                break;
 

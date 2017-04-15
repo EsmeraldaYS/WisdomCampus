@@ -1,12 +1,15 @@
 package demo.ysu.com.wisdomcampus.Acitivity;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
@@ -72,6 +75,21 @@ public class NewActivity extends AppCompatActivity {
                         layoutManager.setOrientation(OrientationHelper. VERTICAL);
                         recyclerAdapter=new MyRecyclerAdapter(context,listlinksbean);
                         recyclerView.setAdapter( recyclerAdapter);
+                        recyclerAdapter.setOnItemClickListener(new MyRecyclerAdapter.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                Log.d("RECYCQQ",position+"QQQ");
+                                Intent intent= new Intent();
+
+                                intent.setAction(Intent.ACTION_VIEW);
+
+                                Uri content_url = Uri.parse(listlinksbean.get(position).getLink());
+
+                                intent.setData(content_url);
+
+                                startActivity(Intent.createChooser(intent, "请选择一款浏览器"));
+                            }
+                        });
                     }
 
 

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    tools:context="demo.ysu.com.wisdomcampus.TheFirstActivity">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+<com.youth.banner.Banner
+    android:id="@+id/banner"
+    android:layout_width="match_parent"
+    android:layout_height="232dp"
+    tools:layout_editor_absoluteY="0dp"
+    app:image_scale_type="fit_center"
+    tools:layout_editor_absoluteX="8dp">
+
+</com.youth.banner.Banner>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:paddingTop="2dp"
+            android:layout_gravity="center"
+            android:text="校园动态"
+            android:textColor="@android:color/holo_blue_bright"
+            android:textSize="18sp" />
+
+        <ListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null"/>
+    </LinearLayout>
+
+     </LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+    android:id="@+id/floatingActionButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="20dp"
+    android:layout_centerInParent="true"
+    android:src="@mipmap/iconjiaowu"
+    app:elevation="8dp"
+    app:pressedTranslationZ="16dp" />
+
+</FrameLayout>

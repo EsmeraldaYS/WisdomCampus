@@ -28,7 +28,7 @@ android:src="@drawable/loginmeitu" />
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:layout_weight="0.48"
-            android:src="@mipmap/login_header" />
+            android:src="@mipmap/icbegin" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
